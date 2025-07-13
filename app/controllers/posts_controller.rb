@@ -23,15 +23,12 @@ class PostsController < ApplicationController
   def create
     @post = Post.new(post_params)
 
-    respond_to do |format|
-      begin
-        @post.save!
-        format.html { redirect_to @post, notice: "Post was successfully created." }
-        format.json { render :show, status: :created, location: @post }
-      rescue ActiveRecord::RecordInvalid => e
-        Rails.error.report(e)
-        redirect_to new_post_path
-      end
+    begin
+      @post.save!
+      redirect_to @post, notice: "Post was successfully created."
+    rescue ActiveRecord::RecordInvalid => e
+      Rails.error.report(e)
+      redirect_to new_post_path
     end
   end
 
