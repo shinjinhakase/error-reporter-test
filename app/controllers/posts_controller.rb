@@ -24,12 +24,13 @@ class PostsController < ApplicationController
     @post = Post.new(post_params)
 
     respond_to do |format|
-      if @post.save
+      begin
+        @post.save!
         format.html { redirect_to @post, notice: "Post was successfully created." }
         format.json { render :show, status: :created, location: @post }
-      else
-        format.html { render :new, status: :unprocessable_entity }
-        format.json { render json: @post.errors, status: :unprocessable_entity }
+      rescue ActiveRecord::RecordInvalid => e
+        Rails.error.report(e)
+        redirect_to new_post_path
       end
     end
   end
